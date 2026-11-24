@@ -1,0 +1,3 @@
+- insert:
+    - id: custom-to-dsh
+      name: "dsh-plugin-custom-to-dsh"

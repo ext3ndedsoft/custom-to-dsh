@@ -1,0 +1,14 @@
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="7.5" y="7.5" width="14.5" height="14.5" rx="3.5" fill="url(#ctd-back)" fill-opacity="0.78" />
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5 14H25C26.933 14 28.5 15.567 28.5 17.5V25C28.5 26.933 26.933 28.5 25 28.5H17.5C15.567 28.5 14 26.933 14 25V17.5C14 15.567 15.567 14 17.5 14ZM21.25 17.2L22.25 20.25L25.3 21.25L22.25 22.25L21.25 25.3L20.25 22.25L17.2 21.25L20.25 20.25L21.25 17.2Z" fill="url(#ctd-front)" fill-opacity="0.88" />
+  <defs>
+    <linearGradient id="ctd-back" x1="7.5" y1="7.5" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#69B9FF" />
+      <stop offset="1" stop-color="#324DE2" />
+    </linearGradient>
+    <linearGradient id="ctd-front" x1="14" y1="14" x2="28.5" y2="28.5" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#45E7A4" />
+      <stop offset="1" stop-color="#05909D" />
+    </linearGradient>
+  </defs>
+</svg>

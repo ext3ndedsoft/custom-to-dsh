@@ -62,6 +62,22 @@
 
 ## Быстрая установка
 
+### Через интерфейс DSH (рекомендуется)
+
+Откройте **Плагины → Добавить плагин** в DSH и вставьте ссылку на репозиторий:
+
+```text
+https://github.com/ext3ndedsoft/custom-to-dsh
+```
+
+Или через CLI:
+
+```bash
+dsh plugin --profile web add https://github.com/ext3ndedsoft/custom-to-dsh
+```
+
+### Через скрипт `install.mjs`
+
 Понадобится **Node.js 20+** и профиль DSH.
 
 ```bash

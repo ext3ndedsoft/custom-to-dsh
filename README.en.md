@@ -60,6 +60,22 @@ Press **`Ctrl+Alt+K`** or click the thin handle on the left edge of the window.
 
 ## Quick install
 
+### Via DSH Plugin Manager (recommended)
+
+Open **Plugins → Add plugin** in DSH and paste the repository URL:
+
+```text
+https://github.com/ext3ndedsoft/custom-to-dsh
+```
+
+Or via CLI:
+
+```bash
+dsh plugin --profile web add https://github.com/ext3ndedsoft/custom-to-dsh
+```
+
+### Via `install.mjs`
+
 Requires **Node.js 20+** and an initialized DSH profile.
 
 ```bash

@@ -1,0 +1,48 @@
+{
+  "name": "dsh-plugin-custom-to-dsh",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full visual customization for DeepSeek Harness: OLED palette, wallpapers, frosted glass panels, branding, animations, and smooth typing (Ctrl+Alt+K)",
+  "type": "module",
+  "main": "./plugins/custom-to-dsh/index.js",
+  "exports": {
+    ".": "./plugins/custom-to-dsh/index.js",
+    "./client": "./plugins/custom-to-dsh/client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "plugins/custom-to-dsh/index.js",
+    "plugins/custom-to-dsh/client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": []
+    }
+  },
+  "scripts": {
+    "test": "node plugins/custom-to-dsh/test.mjs"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "theme",
+    "oled",
+    "skin"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ext3ndedsoft/custom-to-dsh.git"
+  },
+  "homepage": "https://github.com/ext3ndedsoft/custom-to-dsh#readme"
+}

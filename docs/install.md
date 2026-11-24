@@ -1,5 +1,25 @@
 # Установка и миграция
 
+Репозиторий оформлен как полноценный DSH-бандл (`package.json` + `cordis.patch.yml`),
+поэтому его можно поставить прямо из интерфейса DSH по Git-ссылке, через
+`install.mjs` или вручную. Не смешивайте два способа одновременно: если раньше
+ставили через `install.mjs`, перед установкой бандла выполните
+`node install.mjs --uninstall` (настройки в браузере сохранятся).
+
+## Через интерфейс DSH (бандл)
+
+Откройте **Плагины → Добавить плагин** и вставьте:
+
+```text
+https://github.com/ext3ndedsoft/custom-to-dsh
+```
+
+Или через CLI:
+
+```bash
+dsh plugin --profile web add https://github.com/ext3ndedsoft/custom-to-dsh
+```
+
 ## Скриптом
 
 ```bash
