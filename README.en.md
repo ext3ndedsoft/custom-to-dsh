@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.en.png?v=1" alt="custom-to-dsh — OLED skin, glass UI & effects for DeepSeek Harness" width="100%">
+  <img src="assets/banner.en.png?v=2" alt="custom-to-dsh — OLED skin, glass UI & effects for DeepSeek Harness" width="100%">
 </p>
 
 <p align="center">
