@@ -5,4 +5,5 @@ Thumbs.db
 *.bak
 assets/banner-preview.png
 preview/preview*.html
+preview/banner*.html
 preview/banner*.png
