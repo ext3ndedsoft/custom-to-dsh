@@ -154,8 +154,10 @@ window.__ModuleLoader__ = {
   const xyPad = panel.querySelector(".ctd-xy");
   check("2D XY focal pad rendered", !!xyPad);
 
-  // 5. Test clearing runLabel restores original text
+  // 5. Test clearing runLabel restores original text + smooth tab animation
   navBtns[2].click(); // Brand view
+  check("nav pill translated to tab 2", panel.querySelector(".ctd-nav-pill")?.style.transform === "translateY(74px)");
+  check("tab switch animates view", !!panel.querySelector(".ctd-view.anim"));
   const inputs = [...panel.querySelectorAll(".ctd-input")];
   const runIn = inputs.find(i => i.value === "Thinking {t}");
   check("runLabel input populated", !!runIn);

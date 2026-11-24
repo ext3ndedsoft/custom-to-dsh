@@ -456,24 +456,46 @@ html[data-skin-off] body::before, html[data-skin-off] body::after { display: non
 .ctd-brand-txt b { display: block; font-size: 12.5px; font-weight: 650; letter-spacing: -.01em; line-height: 1.2; }
 .ctd-brand-txt span { display: block; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ctd-faint); margin-top: 1px; }
 
-.ctd-nav { display: flex; flex-direction: column; gap: 3px; }
-.ctd-nav button {
-	position: relative; display: flex; align-items: center; gap: 9px;
-	width: 100%; padding: 8px 10px; border-radius: 10px; border: 0;
-	background: transparent; color: var(--ctd-muted);
-	font-size: 12px; font-weight: 500; text-align: left; cursor: pointer;
-	transition: background .14s, color .14s;
+.ctd-nav { position: relative; display: flex; flex-direction: column; gap: 3px; }
+.ctd-nav-pill {
+	position: absolute; left: 0; right: 0; top: 0; height: 34px;
+	border-radius: 10px; background: rgba(255, 255, 255, .085);
+	pointer-events: none; z-index: 0;
+	transition: transform .24s cubic-bezier(.22, 1, .36, 1);
 }
-.ctd-nav button:hover { background: rgba(255, 255, 255, .045); color: var(--ctd-fg); }
-.ctd-nav button[aria-selected="true"] {
-	background: rgba(255, 255, 255, .085); color: var(--ctd-fg); font-weight: 600;
-}
-.ctd-nav button[aria-selected="true"]::before {
+.ctd-nav-pill::before {
 	content: ""; position: absolute; left: 0; top: 7px; bottom: 7px; width: 2.5px;
 	border-radius: 99px; background: var(--ctd-ac);
 }
-.ctd-nav button svg { flex: none; opacity: .78; }
+.ctd-nav button {
+	position: relative; z-index: 1; display: flex; align-items: center; gap: 9px;
+	width: 100%; height: 34px; padding: 0 10px; border-radius: 10px; border: 0;
+	background: transparent; color: var(--ctd-muted);
+	font-size: 12px; font-weight: 500; text-align: left; cursor: pointer;
+	transition: background .14s, color .18s;
+}
+.ctd-nav button:hover { background: rgba(255, 255, 255, .04); color: var(--ctd-fg); }
+.ctd-nav button[aria-selected="true"] {
+	color: var(--ctd-fg); font-weight: 600;
+}
+.ctd-nav button[aria-selected="true"]:hover { background: transparent; }
+.ctd-nav button svg { flex: none; opacity: .78; transition: opacity .18s, color .18s; }
 .ctd-nav button[aria-selected="true"] svg { opacity: 1; color: var(--ctd-ac); }
+
+.ctd-view {
+	display: flex; flex-direction: column; gap: 16px;
+}
+.ctd-view.anim {
+	animation: ctd-view-in .22s cubic-bezier(.22, 1, .36, 1) both;
+}
+@keyframes ctd-view-in {
+	from { opacity: 0; transform: translateY(calc(var(--dir, 1) * 10px)); filter: blur(2px); }
+	to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+	.ctd-nav-pill { transition: none; }
+	.ctd-view.anim { animation: none; }
+}
 
 .ctd-rail-foot {
 	margin-top: auto; display: flex; flex-direction: column; gap: 8px;
@@ -781,8 +803,9 @@ html[data-skin-off] body::before, html[data-skin-off] body::after { display: non
 	.ctd-panel { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); height: min(86vh, 660px); }
 	.ctd-rail { border-right: 0; border-bottom: 1px solid var(--ctd-line); padding: 10px 12px; gap: 8px; }
 	.ctd-nav { flex-direction: row; }
-	.ctd-nav button { justify-content: center; padding: 6px; }
-	.ctd-nav button::before { display: none; }
+	.ctd-nav-pill { display: none; }
+	.ctd-nav button { justify-content: center; padding: 6px; height: 30px; }
+	.ctd-nav button[aria-selected="true"] { background: rgba(255, 255, 255, .085); }
 	.ctd-rail-foot { display: none; }
 	.ctd-wall-grid { grid-template-columns: 1fr; }
 }
@@ -1938,8 +1961,74 @@ html[data-skin-off] body::before, html[data-skin-off] body::after { display: non
 			rerender();
 		};
 
+		const renderActiveView = (animateDir = 0) => {
+			if (!panel) return;
+			const body = panel.querySelector(".ctd-body");
+			if (!body) return;
+			meterEl = null;
+			meterFillEl = null;
+			const nodes = activeTab === "wall" ? buildWallView()
+				: activeTab === "glass" ? buildGlassView()
+				: activeTab === "brand" ? buildBrandView()
+				: buildFxView();
+			const view = el("div", "ctd-view" + (animateDir ? " anim" : ""));
+			if (animateDir) view.style.setProperty("--dir", String(animateDir));
+			view.append(...nodes);
+			body.replaceChildren(view);
+			if (animateDir) body.scrollTop = 0;
+			updateMeter();
+		};
+
+		const switchTab = (id) => {
+			if (activeTab === id) return;
+			const prevIdx = NAV_ITEMS.findIndex((x) => x[0] === activeTab);
+			const nextIdx = NAV_ITEMS.findIndex((x) => x[0] === id);
+			const dir = nextIdx > prevIdx ? 1 : -1;
+			activeTab = id;
+			saveTab(id);
+			if (!panel) return;
+			const navBtns = panel.querySelectorAll(".ctd-nav button");
+			navBtns.forEach((b, i) => b.setAttribute("aria-selected", i === nextIdx ? "true" : "false"));
+			const pill = panel.querySelector(".ctd-nav-pill");
+			if (pill) pill.style.transform = `translateY(${nextIdx * 37}px)`;
+			const curNav = NAV_ITEMS[nextIdx] || NAV_ITEMS[0];
+			const h2 = panel.querySelector(".ctd-top-t h2");
+			if (h2) h2.textContent = curNav[1];
+			renderActiveView(dir);
+		};
+
 		const fill = () => {
+			if (panel.dataset.built === "1") {
+				const power = panel.querySelector(".ctd-power");
+				if (power) {
+					power.classList.toggle("on", state.enabled);
+					const pSpan = power.querySelector("span");
+					if (pSpan) pSpan.textContent = state.enabled ? "Скин активен" : "Скин выкл";
+					const pSw = power.querySelector(".ctd-sw");
+					if (pSw) {
+						pSw.classList.toggle("on", state.enabled);
+						pSw.setAttribute("aria-pressed", state.enabled ? "true" : "false");
+					}
+				}
+				const rBtns = panel.querySelectorAll(".ctd-rbtn");
+				if (rBtns[0]) {
+					if (ioOpen) rBtns[0].setAttribute("data-on", "1");
+					else rBtns[0].removeAttribute("data-on");
+				}
+				if (rBtns[1]) {
+					const isConfirming = Date.now() < resetConfirmUntil;
+					rBtns[1].textContent = isConfirming ? "Точно?" : "Сброс";
+					if (isConfirming) rBtns[1].setAttribute("data-confirm", "1");
+					else rBtns[1].removeAttribute("data-confirm");
+				}
+				const ioSlot = panel.querySelector(".ctd-io-slot");
+				if (ioSlot) ioSlot.replaceChildren(...(ioOpen ? [buildIoDrawer()] : []));
+				renderActiveView(0);
+				return;
+			}
+
 			panel.replaceChildren();
+			panel.dataset.built = "1";
 
 			const rail = el("div", "ctd-rail");
 			const brand = el("div", "ctd-brand");
@@ -1949,15 +2038,17 @@ html[data-skin-off] body::before, html[data-skin-off] body::after { display: non
 			);
 
 			const nav = el("div", "ctd-nav");
+			const navPill = el("span", "ctd-nav-pill");
+			navPill.setAttribute("aria-hidden", "true");
+			const initIdx = Math.max(0, NAV_ITEMS.findIndex((x) => x[0] === activeTab));
+			navPill.style.transform = `translateY(${initIdx * 37}px)`;
+			nav.append(navPill);
+
 			NAV_ITEMS.forEach(([id, label, , icon]) => {
 				const b = el("button", "", `${icon}<span>${label}</span>`);
 				b.type = "button";
 				b.setAttribute("aria-selected", activeTab === id ? "true" : "false");
-				b.addEventListener("click", () => {
-					activeTab = id;
-					saveTab(id);
-					rerender();
-				});
+				b.addEventListener("click", () => switchTab(id));
 				nav.append(b);
 			});
 
@@ -2025,16 +2116,12 @@ html[data-skin-off] body::before, html[data-skin-off] body::after { display: non
 			topR.append(rstTab, closeBtn);
 			top.append(topT, topR);
 
+			const ioSlot = el("div", "ctd-io-slot");
+			if (ioOpen) ioSlot.append(buildIoDrawer());
 			const body = el("div", "ctd-body");
-			const nodes = activeTab === "wall" ? buildWallView()
-				: activeTab === "glass" ? buildGlassView()
-				: activeTab === "brand" ? buildBrandView()
-				: buildFxView();
-			body.append(...nodes);
-
-			main.append(top, ...(ioOpen ? [buildIoDrawer()] : []), body);
+			main.append(top, ioSlot, body);
 			panel.append(rail, main);
-			updateMeter();
+			renderActiveView(0);
 		};
 
 		const openPanel = () => {
