@@ -1,0 +1,8 @@
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+*.bak
+assets/banner-preview.png
+preview/preview*.html
+preview/banner*.png

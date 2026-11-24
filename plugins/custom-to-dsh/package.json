@@ -1,0 +1,18 @@
+{
+  "name": "dsh-plugin-custom-to-dsh",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full visual customization for DeepSeek Harness: OLED palette, wallpapers, frosted glass panels, branding, animations, and smooth typing (Ctrl+Alt+K)",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js"
+  },
+  "dsh": {
+    "client": {
+      "inject": [],
+      "platform": "web"
+    }
+  }
+}
